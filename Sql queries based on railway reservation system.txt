@@ -1,0 +1,54 @@
+-- Show tickets with user and train details
+SELECT t.PNR, r.Name, r.PhoneNo, tr.TrainName, tr.Source, tr.Destination, t.Status
+FROM Ticket t
+JOIN RegisteredUser r ON t.UserId = r.UserId
+JOIN Train tr ON t.TrainNo = tr.TrainNo;
+
+-- Find users who booked tickets for 'Delhi' destination
+SELECT Name 
+FROM RegisteredUser
+WHERE UserId IN (
+    SELECT UserId 
+    FROM Ticket t JOIN Train tr ON t.TrainNo = tr.TrainNo
+    WHERE tr.Destination = 'Delhi'
+);
+
+
+-- Count tickets booked per train
+SELECT tr.TrainName, COUNT(t.PNR) AS Total_Bookings
+FROM Train tr
+LEFT JOIN Ticket t ON tr.TrainNo = t.TrainNo
+GROUP BY tr.TrainName;
+
+
+-- Update Ticket Status
+UPDATE Ticket SET Status = 'Cancelled' WHERE PNR = 2;
+
+-- Delete a Visitor
+DELETE FROM Visitor WHERE VisitorId = 5;
+
+-- Insert a new Train
+INSERT INTO Train VALUES (106,'Express Mail','Patna','Delhi','Platform 6');
+
+
+—Show all trains and their bookings (even if no ticket is booked).
+SELECT tr.TrainNo, tr.TrainName, t.PNR, t.Status
+FROM Train tr
+LEFT JOIN Ticket t ON tr.TrainNo = t.TrainNo;
+
+—Show all tickets and their trains, ensuring tickets are always shown. 
+SELECT t.PNR, t.Status, tr.TrainName, tr.Source, tr.Destination
+FROM Ticket t
+RIGHT JOIN Train tr ON t.TrainNo = tr.TrainNo;
+
+
+—Get all trains with their tickets (even if no ticket exists) and all tickets with their trains (even if train doesn’t exist).
+SELECT tr.TrainNo, tr.TrainName, t.PNR, t.Status
+FROM Train tr
+LEFT JOIN Ticket t ON tr.TrainNo = t.TrainNo
+
+UNION
+
+SELECT tr.TrainNo, tr.TrainName, t.PNR, t.Status
+FROM Train tr
+RIGHT JOIN Ticket t ON tr.TrainNo = t.TrainNo;

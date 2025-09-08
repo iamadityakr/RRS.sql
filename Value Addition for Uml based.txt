@@ -1,0 +1,39 @@
+-- Registered Users
+INSERT INTO RegisteredUser (Password, Name, PhoneNo, Age) VALUES
+('pass123','Aditya Kumar','9876543210',25),
+('abc123','Riya Sharma','9876501234',22),
+('secure99','Aman Gupta','7896543210',30),
+('riya@123','Neha Singh','8765432109',27),
+('test@123','Rohit Mehta','9123456780',35);
+
+-- Visitors
+INSERT INTO Visitor (Name, PhoneNo) VALUES
+('Kunal Verma','9998887771'),
+('Priya Kapoor','9998887772'),
+('Suresh Yadav','9998887773'),
+('Anjali Rao','9998887774'),
+('Vikram Malhotra','9998887775');
+
+-- Admin
+INSERT INTO Admin (Username, Password) VALUES
+('admin1','admin@123'),
+('admin2','admin@456'),
+('superuser','super@999'),
+('manager','manage@321'),
+('root','root@pass');
+
+-- Trains
+INSERT INTO Train (TrainNo, TrainName, Source, Destination, Position) VALUES
+(101,'Shatabdi Express','Delhi','Lucknow','Platform 1'),
+(102,'Rajdhani Express','Mumbai','Delhi','Platform 3'),
+(103,'Duronto Express','Chennai','Hyderabad','Platform 2'),
+(104,'Garib Rath','Kolkata','Delhi','Platform 4'),
+(105,'Jan Shatabdi','Pune','Mumbai','Platform 5');
+
+-- Tickets
+INSERT INTO Ticket (Status, PaymentType, DateOfJourney, TrainNo, UserId) VALUES
+('Booked','UPI','2025-09-15',101,1),
+('Booked','Card','2025-09-16',102,2),
+('Cancelled','UPI','2025-09-20',103,3),
+('Booked','Cash','2025-09-25',104,4),
+('Pending','UPI','2025-09-28',105,5);

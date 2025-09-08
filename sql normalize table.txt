@@ -1,0 +1,43 @@
+-- Registered User Table
+CREATE TABLE RegisteredUser (
+    UserId INT AUTO_INCREMENT PRIMARY KEY,
+    Password VARCHAR(50) NOT NULL,
+    Name VARCHAR(100) NOT NULL,
+    PhoneNo VARCHAR(15) UNIQUE NOT NULL,
+    Age INT CHECK (Age >= 0)
+);
+
+-- Visitor Table
+CREATE TABLE Visitor (
+    VisitorId INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    PhoneNo VARCHAR(15) UNIQUE
+);
+
+-- Admin Table
+CREATE TABLE Admin (
+    AdminId INT AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(50) UNIQUE NOT NULL,
+    Password VARCHAR(50) NOT NULL
+);
+
+-- Train Table
+CREATE TABLE Train (
+    TrainNo INT PRIMARY KEY,
+    TrainName VARCHAR(100) NOT NULL,
+    Source VARCHAR(100) NOT NULL,
+    Destination VARCHAR(100) NOT NULL,
+    Position VARCHAR(50)
+);
+
+-- Ticket Table
+CREATE TABLE Ticket (
+    PNR INT AUTO_INCREMENT PRIMARY KEY,
+    Status VARCHAR(20) CHECK (Status IN ('Booked','Cancelled','Pending')),
+    PaymentType VARCHAR(20),
+    DateOfJourney DATE NOT NULL,
+    TrainNo INT,
+    UserId INT,
+    FOREIGN KEY (TrainNo) REFERENCES Train(TrainNo),
+    FOREIGN KEY (UserId) REFERENCES RegisteredUser(UserId)
+);
