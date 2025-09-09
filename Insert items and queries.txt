@@ -1,0 +1,74 @@
+-- USERS (5 records)
+INSERT INTO Users (name,email,phone,password,user_type) VALUES
+('Aditya Kumar','aditya@mail.com','9876543210','pass123','passenger'),
+('Rohit Sharma','rohit@mail.com','9876501234','pass456','passenger'),
+('Priya Singh','priya@mail.com','9876512345','pass789','passenger'),
+('Sneha Patel','sneha@mail.com','9876523456','pass321','passenger'),
+('Admin User','admin@mail.com','9999999999','admin123','admin');
+
+-- TRAINS (5 records)
+INSERT INTO Train (train_name,source_station,destination_station,total_seats,available_seats,departure_time,arrival_time) VALUES
+('Rajdhani Express','Delhi','Mumbai',300,300,'2025-09-10 06:00:00','2025-09-10 20:00:00'),
+('Shatabdi Express','Bangalore','Chennai',200,200,'2025-09-11 07:00:00','2025-09-11 11:00:00'),
+('Duronto Express','Kolkata','Delhi',250,250,'2025-09-12 08:30:00','2025-09-12 22:30:00'),
+('Garib Rath','Patna','Delhi',280,280,'2025-09-13 09:00:00','2025-09-13 21:00:00'),
+('Tejas Express','Lucknow','Agra',150,150,'2025-09-14 06:15:00','2025-09-14 10:15:00');
+
+-- RESERVATIONS (5 records)
+INSERT INTO Reservation (user_id,train_id,travel_date,seat_number,status) VALUES
+(1,1,'2025-09-10',21,'booked'),
+(2,2,'2025-09-11',15,'booked'),
+(3,3,'2025-09-12',45,'booked'),
+(4,4,'2025-09-13',60,'booked'),
+(1,5,'2025-09-14',12,'booked');
+
+-- PAYMENTS (5 records)
+INSERT INTO Payment (reservation_id,amount,method) VALUES
+(1,1500.00,'UPI'),
+(2,1200.00,'Card'),
+(3,2000.00,'NetBanking'),
+(4,1800.00,'Cash'),
+(5,1000.00,'UPI');
+
+SELECT * FROM Train
+WHERE source_station='Delhi' AND destination_station='Mumbai';
+
+—Show reservations of a passenger
+SELECT r.reservation_id, t.train_name, r.travel_date, r.seat_number, r.status
+FROM Reservation r
+JOIN Train t ON r.train_id = t.train_id
+WHERE r.user_id = 1;
+
+—Find total seats booked on a train
+SELECT t.train_name, COUNT(r.reservation_id) AS booked_seats
+FROM Train t
+JOIN Reservation r ON t.train_id = r.train_id
+WHERE r.status='booked' AND t.train_id=1
+GROUP BY t.train_name; 
+
+—Subquery – Find users who booked Rajdhani Express
+
+SELECT name 
+FROM Users 
+WHERE user_id IN (
+    SELECT user_id FROM Reservation WHERE train_id = 1
+);
+
+—Full Join (simulate using UNION since MySQL doesn’t support FULL OUTER JOIN) 
+SELECT u.user_id, u.name, r.reservation_id
+FROM Users u LEFT JOIN Reservation r ON u.user_id = r.user_id
+UNION
+SELECT u.user_id, u.name, r.reservation_id
+FROM Users u RIGHT JOIN Reservation r ON u.user_id = r.user_id;
+
+-- Step 1: Mark reservation as cancelled
+UPDATE Reservation
+SET status = 'cancelled'
+WHERE reservation_id = 1;
+
+-- Step 2: Increase available seats for that train
+UPDATE Train
+SET available_seats = available_seats + 1
+WHERE train_id = (
+    SELECT train_id FROM Reservation WHERE reservation_id = 1
+);
